@@ -1,0 +1,14 @@
+{
+    "name": "root/crawler",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Flyingmana",
+            "email": "flyingmana@googlemail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"CommunityStats\\Crawler\\": "src/"}
+    },
+    "require": {}
+}
