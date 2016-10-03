@@ -49,6 +49,9 @@ bare TEXT
         $dateKey = $date->format('Y-m-d-G');
         $url = sprintf($sourceUrlPattern, $dateKey);
         $targetPath = StaticConfig::CACHE_DIR . "githubarchive/";
+        if (!file_exists($targetPath)) {
+            mkdir($targetPath, 0777, true);
+        }
         $cacheFile = $targetPath . $dateKey.'.json.gz';
         if (file_exists($cacheFile)) {
             $fileCompressed = file_get_contents($cacheFile);
