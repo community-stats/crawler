@@ -119,9 +119,16 @@ bare TEXT
     
     private function persistRows($rows)
     {
-        $statement = $this->pdo->prepare("INSERT OR IGNORE INTO githubEvents 
+        if (getenv("STORAGE_TARGET") === "mysql") {
+            $statement = $this->pdo->prepare("INSERT INTO githubEvents 
+(`id`, `type`, `actor_id`, `repo_id`, `repo_name`, `created_at`, `bare`)
+VALUES (:id, :type, :actor_id, :repo_id, :repo_name, :created_at, :bare)
+ON DUPLICATE KEY UPDATE `created_at` = `created_at`");
+        } else {
+            $statement = $this->pdo->prepare("INSERT OR IGNORE INTO githubEvents 
 (`id`, `type`, `actor_id`, `repo_id`, `repo_name`, `created_at`, `bare`)
 VALUES (:id, :type, :actor_id, :repo_id, :repo_name, :created_at, :bare)");
+        }
         foreach ($rows as $row) {
             $rowData = json_decode($row, true);            
             $statement->execute([
