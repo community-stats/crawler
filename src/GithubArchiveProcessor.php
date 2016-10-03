@@ -72,9 +72,15 @@ bare TEXT
     
     public function run()
     {
-        $dbString = "sqlite:".StaticConfig::CACHE_DIR."/githubArchive.sqlite3";
-        $this->pdo = new \PDO($dbString);
-        $this->initialize();
+        if (getenv("STORAGE_TARGET") === "mysql") {
+            $dbString = "mysql:host=flyingmana-mysql;dbname=james-sandbox";
+            $this->pdo = new \PDO($dbString, getenv("DB_USER"), getenv("DB_PASS"));
+
+        } else {
+            $dbString = "sqlite:".StaticConfig::CACHE_DIR."/githubArchive.sqlite3";
+            $this->pdo = new \PDO($dbString);
+            $this->initialize();
+        }
         gc_disable();
         foreach (range(0,25) as $run) {
             $date = $this->getDate();
