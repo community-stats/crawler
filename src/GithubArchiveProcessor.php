@@ -97,10 +97,10 @@ bare TEXT
     
     private function getDate(): \DateTime
     {
-        $dateRow = $this->pdoQueryFetchAll('Select value from flags where key = \'github_archive_date\'');
+        $dateRow = $this->pdoQueryFetchAll('Select `value` from flags where `key` = \'github_archive_date\'');
         if (!isset($dateRow[0]['value'])) {
             $date = new \DateTime('Yesterday 12:00');
-            $statement = $this->pdo->prepare("INSERT INTO flags (key,value) VALUES ('github_archive_date', :value)");
+            $statement = $this->pdo->prepare("INSERT INTO flags (`key`,`value`) VALUES ('github_archive_date', :value)");
             $statement->execute(['value' => $date->getTimestamp()]);
         } else {
             $date = new \DateTime();
@@ -112,7 +112,7 @@ bare TEXT
     private function updateDate(\DateTime $date): \DateTime
     {
         $date->sub(new \DateInterval('PT1H'));
-        $statement = $this->pdo->prepare("UPDATE flags SET value = :value where key = 'github_archive_date'");
+        $statement = $this->pdo->prepare("UPDATE flags SET `value` = :value where `key` = 'github_archive_date'");
         $statement->execute(['value' => $date->getTimestamp()]);
         return $date;
     }
@@ -120,7 +120,7 @@ bare TEXT
     private function persistRows($rows)
     {
         $statement = $this->pdo->prepare("INSERT OR IGNORE INTO githubEvents 
-(id, type, actor_id, repo_id, repo_name, created_at, bare)
+(`id`, `type`, `actor_id`, `repo_id`, `repo_name`, `created_at`, `bare`)
 VALUES (:id, :type, :actor_id, :repo_id, :repo_name, :created_at, :bare)");
         foreach ($rows as $row) {
             $rowData = json_decode($row, true);            
